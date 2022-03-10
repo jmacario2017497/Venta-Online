@@ -8,4 +8,6 @@ const api = express.Router();
 api.post('/agregarCategoria', [md_autenticacion.Auth, verificarRol.administrador], categoriaController.agregarCategoria);
 api.get('/obtenerCategorias', [md_autenticacion.Auth, verificarRol.administrador], categoriaController.obtenerCategorias);
 api.put('/editarCategoria/:idCategoria', [md_autenticacion.Auth, verificarRol.administrador], categoriaController.editarCategoria)
+api.delete('/eliminarCategoria/:idCategoria',[md_autenticacion.Auth, verificarRol.administrador], categoriaController.eliminarCategoria)
 
+module.exports = api;

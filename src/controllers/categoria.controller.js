@@ -1,4 +1,5 @@
 const Categoria = require('../models/categoria.model');
+const Producto = require('../models/producto.model');
 
 function agregarCategoria(req, res) {
     var parametros = req.body;
@@ -39,14 +40,55 @@ function editarCategoria (req, res) {
 
         return res.status(200).send({categoria: categoriaEditada})
     })
+}
 
+function eliminarCategoria(req, res){
+    var idCat = req.params.idCategoria;
 
+    Categoria.findOne({nombre: "Por Defecto"}, (err, categoriaEncontrada)=>{
+        if(err) return res.status(500).send({mensaje: "error en la peticion"})
+        if(!categoriaEncontrada){
+            const categoriaModel = new Categoria();
+            categoriaModel.nombre="Por Defecto"
+
+            categoriaModel.save((err, categoriaAgregada)=>{
+                if(err) return res.status(500).send({mensaje: "error en la peticion"})
+                if(!categoriaAgregada) return res.status(500).send({ mensaje: "no se ha podido agregar la categoria"})
+
+                Producto.updateMany({categoria: idCat}, {categoria: categoriaAgregada._id}, (err, productosActualizados)=>{
+                    if(err) return res.status(500).send({mensaje: "error en la peticion"})
+
+                    Categoria.findByIdAndDelete(idCat, (err, categoriaEliminada)=>{
+                        if(err) return res.status(500).send({mensaje: "error en la peticion"})
+                        if(!categoriaEliminada) return res.status(500).send({mensaje: "error al intentar eliminar la categoria"})
+
+                        return res.status(200).send({
+                            editados: productosActualizados,
+                            eliminada: categoriaEliminada
+                        })
+                    })
+                })
+            })
+        }else{
+            Producto.updateMany({categoria: idCat}, {categoria: categoriaEncontrada._id}, (err, productosActualizados1)=>{
+                if(err) return res.status(500).send({mensaje: "error en la peticion"})
+                Categoria.findByIdAndDelete(idCat, (err, categoriaEliminada)=>{
+                    if(err) return res.status(500).send({ mensaje: "error en la peticion" })
+                    return res.status(200).send({producto: productosActualizados1, eliminada: categoriaEliminada})
+
+                })
+            })
+        }
+    })
 
 }
+
+
 
 
 module.exports = {
     agregarCategoria,
     obtenerCategorias,
-    editarCategoria
+    editarCategoria,
+    eliminarCategoria
 }
