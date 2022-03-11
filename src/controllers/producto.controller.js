@@ -53,14 +53,16 @@ function obtenerProducto(req, res) {
 
 }
 
-function buscarProductoNombre(req, res){
-    var nomProd = req.params.nombreProd;
 
-    Producto.find({nombre: { $regex: nomProd, $options: 'i' }}, (err, productoEncontrado)=>{
-        if(err) return res.status(500).send({ mensaje: "error en la peticion"})
-        if(!productoEncontrado) return res.status(500).send({ mensaje: "error al intentar buscar el producto"})
 
-        return res.status(200).send({producto: productoEncontrado})
+function buscarProductoNombre(req, res) {
+    var parametros = req.body;
+
+    Producto.find({ nombre: { $regex: parametros.producto, $options: 'i' } }, (err, productoEncontrado) => {
+        if (err) return res.status(500).send({ mensaje: "error en la peticion" })
+        if (!productoEncontrado) return res.status(500).send({ mensaje: "error al intentar buscar el producto" })
+
+        return res.status(200).send({ producto: productoEncontrado })
     })
 }
 
@@ -82,14 +84,15 @@ function controlStock(req, res) {
 
     Producto.findByIdAndUpdate(idProd, { $inc: { cantidad: parametros.cantidad } }, { new: true },
         (err, productoModificado) => {
-        if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
-        if (!productoModificado) return res.status(500).send({ mensaje: 'Error al editar la cantidad del Producto' });
+            if (err) return res.status(500).send({ mensaje: "Error en la peticion" });
+            if (!productoModificado) return res.status(500).send({ mensaje: 'Error al editar la cantidad del Producto' });
 
-        return res.status(200).send({ producto: productoModificado });
+            return res.status(200).send({ producto: productoModificado });
 
-    })
+        })
 
 }
+
 
 
 

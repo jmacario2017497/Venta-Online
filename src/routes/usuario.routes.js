@@ -10,5 +10,9 @@ api.post('/registrar', usuarioController.registrarse);
 api.post('/login', usuarioController.Login);
 api.put('/editarusuario/:idUsuario', md_autenticacion.Auth, usuarioController.editarUsuario)
 api.delete('/eliminarUsuario/:idUsuario', md_autenticacion.Auth, usuarioController.eliminarUsuario)
+api.put('/agregarProductoCarrito', [md_autenticacion.Auth, verificarRol.cliente], usuarioController.agregarProductoCarrito)
+api.put('/eliminarProductoCarrito', [md_autenticacion.Auth, verificarRol.cliente], usuarioController.eliminarProductoCarrito)
+
+
 
 module.exports = api;

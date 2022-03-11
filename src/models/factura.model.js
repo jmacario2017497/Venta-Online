@@ -7,9 +7,10 @@ const FacturaSchema = Schema({
     listaProductos: [{
         nombreProducto: String,
         cantidadComprada: Number,
-        precioUnitario: Number
+        precioUnitario: Number,
+        subTotalCarrito: Number
     }],
     totalFactura: Number
 });
 
-module.exports = mongoose.model('Facturas', UsuarioSchema);
+module.exports = mongoose.model('Factura', FacturaSchema);
