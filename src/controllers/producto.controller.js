@@ -93,6 +93,18 @@ function controlStock(req, res) {
 
 }
 
+function eliminarProducto(req, res) {
+    var idProd = req.params.idProducto;
+
+    Producto.findByIdAndDelete(idProd, (err, productoEliminado) => {
+        if(err) return res.status(500).send({ mensaje: "error en la peticion"})
+        if(!productoEliminado) return res.status(500).send({mensaje: "el producto que quiere eliminar no se encuetra registrado"})
+
+        res.status(200).send({ producto: productoEliminado})
+    })
+
+}
+
 
 
 
@@ -101,6 +113,7 @@ module.exports = {
     agregarProducto,
     obtenerProducto,
     buscarProductoNombre,
+    eliminarProducto,
     editarProdcuto,
     controlStock
 }

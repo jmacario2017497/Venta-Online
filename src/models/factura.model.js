@@ -8,7 +8,7 @@ const FacturaSchema = Schema({
         nombreProducto: String,
         cantidadComprada: Number,
         precioUnitario: Number,
-        subTotalCarrito: Number
+        subTotal: Number
     }],
     totalFactura: Number
 });

@@ -2,6 +2,7 @@ const Usuario = require('../models/usuario.model')
 const Producto = require('../models/producto.model')
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
+const Factura = require('../models/factura.model')
 
 function agregarUsuario(req, res) {
     var parametros = req.body;
@@ -85,8 +86,16 @@ function Login(req, res) {
                 (err, verificacionPassword) => {
                     if (verificacionPassword) {
                         if (parametros.obtenerToken === 'true') {
-                            return res.status(200)
-                                .send({ token: jwt.crearToken(usuarioEncontrado) })
+                            Factura.find({idUsuario: usuarioEncontrado._id}, (err, FacturasEncontradas)=>{
+                                if(err) return res.status(500).send({mensaje: "error en la peticion"})
+                                if(FacturasEncontradas.length == 0){
+                                    return res.status(200).send({token: jwt.crearToken(usuarioEncontrado), facturas: "usted no tiene facturas aún"})
+                                }else{
+                                return res.status(200)
+                                .send({ token: jwt.crearToken(usuarioEncontrado), FacturasEncontradas })
+                            }
+                            })
+                            
                         } else {
                             usuarioEncontrado.password = undefined;
                             return res.status(200)
