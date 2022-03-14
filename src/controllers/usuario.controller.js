@@ -169,6 +169,17 @@ function editarUsuario(req, res) {
     }
 }
 
+function buscarUsuarios(req, res){
+    var idUser = req.params.idUsuario;
+
+    Usuario.findById(idUser, (err, usuarioEncontrado)=>{
+        if(err) return res.status(err).send({ mensaje: "error en la peticion" })
+        if(!usuarioEncontrado) return res.status(500).send({ mensaje: "no se encontro ningun usuario con este ID"})
+
+        return res.status(200).send({usuario: usuarioEncontrado})
+    })
+}
+
 function eliminarUsuario(req, res) {
     var idUser = req.params.idUsuario;
 
@@ -389,6 +400,7 @@ module.exports = {
     registrarse,
     Login,
     editarUsuario,
+    buscarUsuarios,
     eliminarUsuario,
     agregarProductoCarrito,
     eliminarProductoCarrito
